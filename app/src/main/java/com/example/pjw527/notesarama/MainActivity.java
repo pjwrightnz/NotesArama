@@ -5,7 +5,9 @@ import android.app.LauncherActivity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -40,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         notes.add("note one");
         notes.add("note two");
 
+        registerForContextMenu(notesListView);
+
         notesListViewAdaptor = new ArrayAdapter<String>(
                 this,
                 android.R.layout.simple_list_item_1, notes
@@ -64,6 +68,15 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId() == R.id.notesListView) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.long_click_menu, menu);
+        }
     }
 
     @Override
@@ -92,13 +105,33 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == newNote) {
             notes.add(data.getStringExtra(MainActivity.noteContent));
             notesListViewAdaptor.notifyDataSetChanged();
-        }
-        else {
-            notes.set((requestCode-1), data.getStringExtra(MainActivity.noteContent));
+        } else {
+            notes.set((requestCode - 1), data.getStringExtra(MainActivity.noteContent));
             notesListViewAdaptor.notifyDataSetChanged();
         }
 
 
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch(item.getItemId()) {
+            case R.id.edit:
+                // add stuff here
+                return true;
+            case R.id.duplicate:
+                // edit stuff here
+                return true;
+            case R.id.delete:
+                // remove stuff here
+                return true;
+            case R.id.createNotification:
+                // remove stuff here
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
     }
 
 

@@ -19,6 +19,8 @@ public class EditNoteActivity extends AppCompatActivity {
 
         editNoteText = (EditText) findViewById(R.id.editNoteText);
         editNotedButton = (Button) findViewById(R.id.editNotedButton);
+        editNoteText.setText(getIntent().getStringExtra(MainActivity.noteContent));
+        editNoteText.setSelection(editNoteText.getText().length());
 
         editNotedButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,6 +36,5 @@ public class EditNoteActivity extends AppCompatActivity {
     @Override
     public void onActivityResult (int requestCode, int resultCode, Intent data) {
         editNoteText.setText(data.getStringExtra(MainActivity.noteContent));
-
     }
 }
