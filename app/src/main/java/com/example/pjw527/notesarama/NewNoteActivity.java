@@ -1,8 +1,8 @@
 package com.example.pjw527.notesarama;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,8 +20,19 @@ public class NewNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_note);
 
-        notedButton=(Button) findViewById(R.id.notedButton);
-        newNoteText=(EditText) findViewById(R.id.newNoteText);
+        notedButton = (Button) findViewById(R.id.notedButton);
+        newNoteText = (EditText) findViewById(R.id.newNoteText);
+
+        notedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent returnToMainIntent = new Intent(NewNoteActivity.this, MainActivity.class);
+                returnToMainIntent.putExtra(MainActivity.noteContent, newNoteText.getText().toString());
+                setResult(1, returnToMainIntent);
+                finish();
+            }
+        });
+
 
     }
 
@@ -31,7 +42,6 @@ public class NewNoteActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_new_note, menu);
         return true;
     }
-
 
 
     @Override
@@ -44,8 +54,7 @@ public class NewNoteActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }
-        else if (id == R.id.action_done) {
+        } else if (id == R.id.action_done) {
             Intent returnToMainIntent = new Intent();
             returnToMainIntent.putExtra(MainActivity.noteContent, newNoteText.getText().toString());
             setResult(1, returnToMainIntent);
@@ -54,7 +63,6 @@ public class NewNoteActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }
