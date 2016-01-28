@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.app.LauncherActivity;
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
     public static String position = "position";
     private int newNote = 0;
     private int editNote = 1;
+
+    protected BoundWordCountService bwcs = null;
+    protected ServiceConnection connection = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +100,23 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_Info) {
+
+            connection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder binder) {
+                    bwcs = ((BoundWordCountService.LocalBinder) binder).getService();}
+                    @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    bwcs = null;
+
+                }
+            };
+
+            Intent intent = new Intent(MainActivity.this, BoundWordCountService.class);
+            startService(intent);
+            bindService(new Intent(this, BoundWordCountService.class), connection, Context.BIND_AUTO_CREATE);
+            Toast.makeText(MainActivity.this, bwcs.countWords((ArrayList) notes) + " words.", Toast.LENGTH_LONG).show();
+
             return true;
         } else if (id == R.id.action_NewNote) {
 
