@@ -1,13 +1,17 @@
 package com.example.pjw527.notesarama;
 
 import android.app.Activity;
+import android.app.LauncherActivity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         );
 
         notesListView.setAdapter(notesListViewAdaptor);
-
     }
 
     @Override
@@ -61,21 +64,29 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_Info) {
             return true;
-        }
-        else if (id == R.id.action_NewNote) {
+        } else if (id == R.id.action_NewNote) {
 
-           Intent newNoteIntent = new Intent(MainActivity.this, NewNoteActivity.class);
+            Intent newNoteIntent = new Intent(MainActivity.this, NewNoteActivity.class);
             startActivityForResult(newNoteIntent, 0);
-
-            //notes.add("note three");
-            //notesListViewAdaptor.notifyDataSetChanged();
         }
+
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
-    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         notes.add(data.getStringExtra(MainActivity.noteContent));
         notesListViewAdaptor.notifyDataSetChanged();
     }
+
+    public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
+
+        String text = notes.get(position);
+        Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
+        intent.putExtra(MainActivity.noteContent, text);
+        startActivity(intent);
+
+    }
+
 }
