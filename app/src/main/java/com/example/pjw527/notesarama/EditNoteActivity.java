@@ -29,8 +29,6 @@ public class EditNoteActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
     }
 
     @Override

@@ -21,12 +21,13 @@ public class MainActivity extends AppCompatActivity {
     protected ListView notesListView;
     protected ArrayAdapter<String> notesListViewAdaptor;
     public static String noteContent;
+    private int newNote = 0;
+    private int editNote = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         android.support.v7.app.ActionBar menu = getSupportActionBar();
         menu.setDisplayShowHomeEnabled(true);
@@ -45,6 +46,17 @@ public class MainActivity extends AppCompatActivity {
         );
 
         notesListView.setAdapter(notesListViewAdaptor);
+
+        notesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
+                String text = notes.get(position);
+                Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
+                intent.putExtra(MainActivity.noteContent, text);
+                int requestCode = position + 1;
+                startActivityForResult(intent, requestCode);
+            }
+        });
     }
 
     @Override
@@ -67,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (id == R.id.action_NewNote) {
 
             Intent newNoteIntent = new Intent(MainActivity.this, NewNoteActivity.class);
-            startActivityForResult(newNoteIntent, 0);
+            startActivityForResult(newNoteIntent, newNote);
         }
 
 
@@ -76,17 +88,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        notes.add(data.getStringExtra(MainActivity.noteContent));
-        notesListViewAdaptor.notifyDataSetChanged();
+
+        if (requestCode == newNote) {
+            notes.add(data.getStringExtra(MainActivity.noteContent));
+            notesListViewAdaptor.notifyDataSetChanged();
+        }
+        else {
+            notes.set((requestCode-1), data.getStringExtra(MainActivity.noteContent));
+            notesListViewAdaptor.notifyDataSetChanged();
+        }
+
+
     }
 
-    public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
-
-        String text = notes.get(position);
-        Intent intent = new Intent(MainActivity.this, EditNoteActivity.class);
-        intent.putExtra(MainActivity.noteContent, text);
-        startActivity(intent);
-
-    }
 
 }
