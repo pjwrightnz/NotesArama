@@ -1,12 +1,18 @@
 package com.example.pjw527.notesarama;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by pjw527 on 04/02/2016.
  */
-public class Note {
-
+public class Note implements Serializable {
 
     String note;
+    String noteDesc;
+    int importance;
 
     public Note(String note, String noteDesc, int importance) {
         this.note = note;
@@ -38,8 +44,7 @@ public class Note {
         this.note = note;
     }
 
-    String noteDesc;
-    int importance;
+
 
 
     @Override

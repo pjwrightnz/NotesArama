@@ -16,6 +16,7 @@ public class NewNoteActivity extends AppCompatActivity {
     Button notedButton;
     EditText noteText, noteDescText, editNoteText;
     RatingBar ratingBar;
+    Note newNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,17 +32,14 @@ public class NewNoteActivity extends AppCompatActivity {
         notedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-               Note newNote = new Note(noteText.getText().toString(), noteDescText.getText().toString(), (int) ratingBar.getRating());
+               newNote = new Note(noteText.getText().toString(), noteDescText.getText().toString(), (int) ratingBar.getRating());
                 Log.d("note", newNote.toString());
                 Intent returnToMainIntent = new Intent(NewNoteActivity.this, MainActivity.class);
-                returnToMainIntent.putExtra(MainActivity.noteContent, noteText.getText().toString());
+                returnToMainIntent.putExtra(MainActivity.noteContent, newNote);
                 setResult(1, returnToMainIntent);
                 finish();
             }
         });
-
-
     }
 
     @Override
@@ -64,7 +62,7 @@ public class NewNoteActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_done) {
             Intent returnToMainIntent = new Intent();
-            returnToMainIntent.putExtra(MainActivity.noteContent, noteText.getText().toString());
+            returnToMainIntent.putExtra(MainActivity.noteContent, newNote);
             setResult(1, returnToMainIntent);
             finish();
         }

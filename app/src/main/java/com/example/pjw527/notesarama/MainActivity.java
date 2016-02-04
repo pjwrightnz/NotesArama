@@ -1,15 +1,12 @@
 package com.example.pjw527.notesarama;
 
-import android.app.Activity;
-import android.app.LauncherActivity;
-import android.app.Notification;
-import android.app.NotificationManager;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -18,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -53,9 +49,7 @@ public class MainActivity extends AppCompatActivity {
         notes.add(testNote1);
 
         registerForContextMenu(notesListView);
-
         notesListViewAdaptor = new CustomListViewAdaptor(this, notes);
-
         notesListView.setAdapter(notesListViewAdaptor);
 
         notesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -63,11 +57,15 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
                 //String text = notes.get(position);
                 Intent editNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-               // editNoteIntent.putExtra(MainActivity.noteContent, text);
+                // editNoteIntent.putExtra(MainActivity.noteContent, text);
                 editNoteIntent.putExtra(MainActivity.position, position);
                 startActivityForResult(editNoteIntent, editNote);
             }
         });
+
+
+        NoteDbOpenHelper notesDbOpenHelper = new NoteDbOpenHelper(this);
+        notesDbOpenHelper.getAllNotes();
     }
 
     @Override
@@ -121,20 +119,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        if (resultCode == 1) {
-//            if (requestCode == newNote) {
-//                notes.add(data.getStringExtra(MainActivity.noteContent));
-//                notesListViewAdaptor.notifyDataSetChanged();
-//            }
-//            if (requestCode == editNote) {
-//                notes.set((data.getIntExtra(MainActivity.position, -1)), data.getStringExtra(MainActivity.noteContent));
-//                notesListViewAdaptor.notifyDataSetChanged();
-//            }
-//        }
-//    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == 1) {
+            if (requestCode == newNote) {
+                //Note note = data.get(MainActivity.noteContent);
+
+                notes.add( (Note)data.getSerializableExtra(MainActivity.noteContent));
+                notesListViewAdaptor.notifyDataSetChanged();
+            }
+            if (requestCode == editNote) {
+               // notes.set((data.getIntExtra(MainActivity.position, -1)), data.getStringExtra(MainActivity.noteContent));
+                notesListViewAdaptor.notifyDataSetChanged();
+            }
+        }
+    }
 
 //    @Override
 //    public boolean onContextItemSelected(MenuItem item) {
