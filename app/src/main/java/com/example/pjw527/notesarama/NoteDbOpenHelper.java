@@ -13,7 +13,7 @@ import java.util.List;
  * Created by pjw527 on 04/02/2016.
  */
 public class NoteDbOpenHelper extends SQLiteOpenHelper{
-
+    String tree;
     protected static final int version = 1;
     protected static final String databaseName = "notes.db";
     protected String CREATE_SQL = "create table Note (_id INTEGER PRIMARY KEY, noteTitle TEXT, noteDescription TEXT, importance INTEGER)";
