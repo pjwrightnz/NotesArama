@@ -3,16 +3,19 @@ package com.example.pjw527.notesarama;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RatingBar;
 
 public class NewNoteActivity extends AppCompatActivity {
 
     Button notedButton;
-    EditText newNoteText;
+    EditText noteText, noteDescText, editNoteText;
+    RatingBar ratingBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,13 +24,18 @@ public class NewNoteActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_note);
 
         notedButton = (Button) findViewById(R.id.notedButton);
-        newNoteText = (EditText) findViewById(R.id.editNoteText);
+        noteText = (EditText) findViewById(R.id.noteText);
+        noteDescText =  (EditText) findViewById(R.id.noteDescText);
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
 
         notedButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+               Note newNote = new Note(noteText.getText().toString(), noteDescText.getText().toString(), (int) ratingBar.getRating());
+                Log.d("note", newNote.toString());
                 Intent returnToMainIntent = new Intent(NewNoteActivity.this, MainActivity.class);
-                returnToMainIntent.putExtra(MainActivity.noteContent, newNoteText.getText().toString());
+                returnToMainIntent.putExtra(MainActivity.noteContent, noteText.getText().toString());
                 setResult(1, returnToMainIntent);
                 finish();
             }
@@ -56,7 +64,7 @@ public class NewNoteActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_done) {
             Intent returnToMainIntent = new Intent();
-            returnToMainIntent.putExtra(MainActivity.noteContent, newNoteText.getText().toString());
+            returnToMainIntent.putExtra(MainActivity.noteContent, noteText.getText().toString());
             setResult(1, returnToMainIntent);
             finish();
         }

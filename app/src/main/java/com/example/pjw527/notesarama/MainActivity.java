@@ -20,16 +20,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    protected List<String> notes;
+    protected List<Note> notes;
     protected ListView notesListView;
-    protected ArrayAdapter<String> notesListViewAdaptor;
+    protected CustomListViewAdaptor notesListViewAdaptor;
     public static String noteContent = "noteContent";
     public static String position = "position";
     private int newNote = 0;
@@ -50,25 +48,22 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         notesListView = (ListView) findViewById(R.id.notesListView);
-        notes = new ArrayList<String>();
-        notes.add("note one");
-        notes.add("note two");
+        notes = new ArrayList<Note>();
+        Note testNote1 = new Note("Tree", "desc", 1);
+        notes.add(testNote1);
 
         registerForContextMenu(notesListView);
 
-        notesListViewAdaptor = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_list_item_1, notes
-        );
+        notesListViewAdaptor = new CustomListViewAdaptor(this, notes);
 
         notesListView.setAdapter(notesListViewAdaptor);
 
         notesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long arg3) {
-                String text = notes.get(position);
+                //String text = notes.get(position);
                 Intent editNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-                editNoteIntent.putExtra(MainActivity.noteContent, text);
+               // editNoteIntent.putExtra(MainActivity.noteContent, text);
                 editNoteIntent.putExtra(MainActivity.position, position);
                 startActivityForResult(editNoteIntent, editNote);
             }
@@ -126,54 +121,54 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        if (resultCode == 1) {
+//            if (requestCode == newNote) {
+//                notes.add(data.getStringExtra(MainActivity.noteContent));
+//                notesListViewAdaptor.notifyDataSetChanged();
+//            }
+//            if (requestCode == editNote) {
+//                notes.set((data.getIntExtra(MainActivity.position, -1)), data.getStringExtra(MainActivity.noteContent));
+//                notesListViewAdaptor.notifyDataSetChanged();
+//            }
+//        }
+//    }
 
-        if (resultCode == 1) {
-            if (requestCode == newNote) {
-                notes.add(data.getStringExtra(MainActivity.noteContent));
-                notesListViewAdaptor.notifyDataSetChanged();
-            }
-            if (requestCode == editNote) {
-                notes.set((data.getIntExtra(MainActivity.position, -1)), data.getStringExtra(MainActivity.noteContent));
-                notesListViewAdaptor.notifyDataSetChanged();
-            }
-        }
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        String text = notes.get(info.position);
-        switch (item.getItemId()) {
-            case R.id.edit:
-                text = notes.get(info.position);
-                Intent editNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
-                editNoteIntent.putExtra(MainActivity.noteContent, text);
-                editNoteIntent.putExtra(MainActivity.position, info.position);
-                startActivityForResult(editNoteIntent, editNote);
-                return true;
-            case R.id.duplicate:
-                text = notes.get(info.position);
-                notes.add(info.position + 1, text);
-                notesListViewAdaptor.notifyDataSetChanged();
-                return true;
-            case R.id.delete:
-                notes.remove(info.position);
-                notesListViewAdaptor.notifyDataSetChanged();
-                Toast.makeText(this, "Message deleted", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.createNotification:
-                Notification notification = new Notification();
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this).setContentTitle(notes.get(info.position)).setContentText("some text here").setSmallIcon(R.drawable.ic_note_add_black_24dp);
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(0, builder.build());
-
-                return true;
-            default:
-                return super.onContextItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+//        String text = notes.get(info.position);
+//        switch (item.getItemId()) {
+//            case R.id.edit:
+//                text = notes.get(info.position);
+//                Intent editNoteIntent = new Intent(MainActivity.this, EditNoteActivity.class);
+//                editNoteIntent.putExtra(MainActivity.noteContent, text);
+//                editNoteIntent.putExtra(MainActivity.position, info.position);
+//                startActivityForResult(editNoteIntent, editNote);
+//                return true;
+//            case R.id.duplicate:
+//                text = notes.get(info.position);
+//                notes.add(info.position + 1, text);
+//                notesListViewAdaptor.notifyDataSetChanged();
+//                return true;
+//            case R.id.delete:
+//                notes.remove(info.position);
+//                notesListViewAdaptor.notifyDataSetChanged();
+//                Toast.makeText(this, "Message deleted", Toast.LENGTH_SHORT).show();
+//                return true;
+//            case R.id.createNotification:
+//                Notification notification = new Notification();
+//                NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this).setContentTitle(notes.get(info.position)).setContentText("some text here").setSmallIcon(R.drawable.ic_note_add_black_24dp);
+//                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//                notificationManager.notify(0, builder.build());
+//
+//                return true;
+//            default:
+//                return super.onContextItemSelected(item);
+//        }
+//    }
 
 
 }

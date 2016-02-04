@@ -23,7 +23,7 @@ public class EditNoteActivity extends AppCompatActivity {
 
 
 
-        editNoteText = (EditText) findViewById(R.id.editNoteText);
+        editNoteText = (EditText) findViewById(R.id.noteText);
         editNotedButton = (Button) findViewById(R.id.editNotedButton);
         editNoteText.setText(getIntent().getStringExtra(MainActivity.noteContent));
         editNoteText.setSelection(editNoteText.getText().length());
